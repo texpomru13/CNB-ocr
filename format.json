@@ -1,0 +1,44 @@
+{
+  "type": "object",
+  "properties": {
+    "fileName":
+
+    { "type": "string", "description": "Имя файла" }
+  ,
+    "documentName":
+
+    { "type": "string", "description": "Наименование документа" }
+  ,
+    "documentСipher":
+
+    { "type": "string", "description": "Шифр документа" }
+  ,
+    "constructionName":
+
+    { "type": "string", "description": "Наименование стройки" }
+  ,
+    "inventoryNumber":
+
+    { "type": "string", "description": "Инвентарный номер" }
+  ,
+    "milestone":
+
+    { "type": "string", "description": "Этап" }
+  ,
+    "stage":
+
+    { "type": "string", "description": "Стадия" }
+  ,
+    "changeNumber":
+
+    { "type": "string", "description": "Номер изменения" }
+  ,
+    "documentDate":
+
+    { "type": "string", "description": "Дата документа в формате дд.мм.гггг" }
+  ,
+    "designInstitute":
+
+    { "type": "string", "description": "Проектный институт" }
+  }
+}
