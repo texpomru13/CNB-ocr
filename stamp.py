@@ -88,6 +88,15 @@ def milestonefinde(fitz_data, param):
         k+=1
     return milse, const_name
 
+def model(img_path, whitelist):
+    return pytesseract.image_to_string(img_path,
+                                config="-c tessedit_char_blacklist=йэ\/"
+                                # "user_words_suffix=user-words user_patterns_suffix=user-patterns"
+                                       " --psm 3 --oem 2 "
+                                       "--user-patterns /usr/local/Cellar/tesseract/5.2.0/share/tessdata/rus.user-patterns "
+                                       "--user-words /usr/local/Cellar/tesseract/5.2.0/share/tessdata/rus.user-words "
+                                       "-l rus".format(whitelist))
+
 
 def titul_recgnize(data, param, fitz_data):
 

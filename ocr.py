@@ -36,11 +36,9 @@ else:
 
 from transformers import AutoModelForSeq2SeqLM, T5TokenizerFast
 
-# Зададим название выбронной модели из хаба
-MODEL_NAME = 'path/to/model'
+MODEL_NAME = 'models/CNB_ner'
 MAX_INPUT = 256
 
-# Загрузка модели и токенизатора
 tokenizer = T5TokenizerFast.from_pretrained(MODEL_NAME)
 model = AutoModelForSeq2SeqLM.from_pretrained(MODEL_NAME)
 
@@ -81,6 +79,7 @@ def preproc(img_path):
 def extrstamp_onlytess(path, startpage= 0):
     doc = fitz.open(path)
     mat = fitz.Matrix(2, 2)
+    from stamp import model
     filename = ".".join(doc.name.split("/")[-1].split(".")[:-1])
     mpage = 7
     img_path = None
@@ -105,13 +104,7 @@ def extrstamp_onlytess(path, startpage= 0):
             continue
         whitelist = "листдазмявкоу.№|"
         whitelist += whitelist.upper()
-        text = re.sub(r" ", " ", pytesseract.image_to_string(img_path,
-                                                             config="-c tessedit_char_blacklist=йэ\/"
-                                                             # "user_words_suffix=user-words user_patterns_suffix=user-patterns"
-                                                                    " --psm 3 --oem 2 "
-                                                                    "--user-patterns /usr/local/Cellar/tesseract/5.2.0/share/tessdata/rus.user-patterns "
-                                                                    "--user-words /usr/local/Cellar/tesseract/5.2.0/share/tessdata/rus.user-words "
-                                                                    "-l rus".format(whitelist))) #\n\b -c tessedit_char_whitelist={}
+        text = re.sub(r" ", " ", model(img_path, whitelist)) #\n\b -c tessedit_char_whitelist={}
 
         text= re.sub("['\\|\\[{}_]", " ", text)
         text= re.sub(" +", " ", text)
@@ -142,61 +135,6 @@ def extrstamp_onlytess(path, startpage= 0):
             return img_path, k
         else:
             os.remove(img_path)
-        # page.set_rotation(90)
-        # w = rect.width - 880
-        # h = 0
-        # mp1 = fitz.Point(w, h)
-        # mp2 = fitz.Point(rect.width, rect.height-720)
-        # clip = fitz.Rect(mp1, mp2)
-        # pix = page.get_pixmap(matrix=mat, clip=clip)
-        # img_path = "tmpstamp.rot.png"
-        # try:
-        #     pix.save(img_path)
-        # except:
-        #     continue
-        #
-        # if preproc(img_path) == 1:
-        #     os.remove(img_path)
-        #     continue
-        # whitelist = "листдазмявкоу.№|"
-        # whitelist += whitelist.upper()
-        # text = re.sub(r" ", " ", pytesseract.image_to_string(img_path,
-        #                                                      config="-c tessedit_char_blacklist=йэ\/"
-        #                                                      # "user_words_suffix=user-words user_patterns_suffix=user-patterns"
-        #                                                             " --psm 3 --oem 2 "
-        #                                                             "--user-patterns /usr/local/Cellar/tesseract/5.2.0/share/tessdata/rus.user-patterns "
-        #                                                             "--user-words /usr/local/Cellar/tesseract/5.2.0/share/tessdata/rus.user-words "
-        #                                                             "-l rus".format(whitelist))) #\n\b -c tessedit_char_whitelist={}
-        #
-        # text= re.sub("['\\|\\[{}_]", " ", text)
-        # text= re.sub(" +", " ", text)
-        # text= re.sub("-+", "-", text)
-        #
-        # text = text.lower()
-        # print(text)
-        # lines = text.split("\n")
-        # ch = 0
-        # for line in lines:
-        #     for che in check:
-        #         if re.search(check[che], line):
-        #             if find[che] <1:
-        #                 if che == "i" and "внес" in line:
-        #                     continue
-        #                 # print(che)
-        #                 if che in "ik":
-        #                     find[che] +=2
-        #                 else:
-        #                     find[che] +=1
-        # ch= sum(find.values())
-        # find = {"d":0,"i":0,"l":0,"s":0,"lv":0,"k":0,"c":0}
-        #
-        # print(k)
-        # print("tess ch - "+ str(ch))
-        # if ch >= 5:
-        #     # print(text)
-        #     return img_path, k
-        # else:
-        #     os.remove(img_path)
         if  k >= mpage:
             return img_path, None
             # break
